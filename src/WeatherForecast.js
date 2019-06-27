@@ -10,14 +10,15 @@ function WeatherForecast(props) {
     }
 
     let weatherImgUrl = getWeatherImgUrl(props.weatherCode);
+    let temp = Math.round(props.temperature);
 
     return (
         <Card border="primary" style={{ width: '11rem', margin: '2%' }}>
             <Card.Header style={{ color: '#007bff', fontWeight: 'bold' }}>Current Weather</Card.Header>
             <Card.Img variant="top" src={weatherImgUrl} />
             <Card.Body>
-                <Card.Title>{props.temperature}</Card.Title>
-                <Card.Text>
+                <Card.Title>{temp}℃</Card.Title>
+                <Card.Text className="weather-text">
                     {props.weather}
                 </Card.Text>
             </Card.Body>

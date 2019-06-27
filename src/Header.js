@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 function Header(props) {
     return (
         <Navbar bg="primary" variant="dark">
-            <Navbar.Brand href="#home">WEATHER</Navbar.Brand>
+            <Navbar.Brand className="navbar-text" href="#home">weather forecast</Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
                 <Navbar.Text>

@@ -1,3 +1,7 @@
 .navbar-text {
     text-transform: uppercase;
 }
+
+.weather-text::first-letter{
+    text-transform: uppercase;
+}

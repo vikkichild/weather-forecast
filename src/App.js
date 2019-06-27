@@ -46,7 +46,7 @@ class App extends Component {
   };
 
   loadWeather2 = async () => {
-    const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.cityInfo.city}&appid=860ae597957b496c4198358824ce99f1`);
+    const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.cityInfo.city}&units=metric&appid=860ae597957b496c4198358824ce99f1`);
     const weatherData = await response.json();
     this.setState({
       weatherInfo: {

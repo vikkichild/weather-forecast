@@ -36,7 +36,7 @@ class WeatherForecastForm extends Component {
             <Jumbotron>
                 <h1>Hello, I know you are from {this.props.city}!</h1>
                 <p> I can tell what is the weather now. </p>
-                <p>Choose what weather forecast you want to use:</p>
+                <p> Choose what weather forecast you want to use: </p>
                 <Form onSubmit={this.handleFormSubmit}>
                     <div key={`custom-radio`} className="mb-3">
                         <Form.Check
