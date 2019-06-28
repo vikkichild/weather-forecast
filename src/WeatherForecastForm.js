@@ -18,12 +18,11 @@ class WeatherForecastForm extends Component {
     handleFormSubmit = event => {
         event.preventDefault();
         this.getWeatherForecast(this.state.selectedForecast)();
-        console.log("You have submitted:", this.state.selectedForecast)
     }
 
     getWeatherForecast(option) {
-        const loadForecast1 = this.props.loadWeather1;
-        const loadForecast2 = this.props.loadWeather2;
+        const loadForecast1 = this.props.checkWeatherCache1;
+        const loadForecast2 = this.props.checkWeatherCache2;
         let forecastCompany = {
             "weatherForecast1": loadForecast1,
             "weatherForecast2": loadForecast2
