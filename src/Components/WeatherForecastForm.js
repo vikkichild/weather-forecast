@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import React, { Component } from "react";
+import Jumbotron from "react-bootstrap/Jumbotron";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 class WeatherForecastForm extends Component {
 
     state = {
-        selectedForecast: ""
+        selectedForecast: "weatherForecast1"
     };
 
-    handleForcastChange = event => {
+    handleForecastChange = event => {
         this.setState({
             selectedForecast: event.target.value
         });
@@ -18,7 +18,8 @@ class WeatherForecastForm extends Component {
     handleFormSubmit = event => {
         event.preventDefault();
         this.getWeatherForecast(this.state.selectedForecast)();
-    }
+        localStorage.setItem("selectedForecast", this.state.selectedForecast);
+    };
 
     getWeatherForecast(option) {
         const loadForecast1 = this.props.checkWeatherCache1;
@@ -28,41 +29,40 @@ class WeatherForecastForm extends Component {
             "weatherForecast2": loadForecast2
         }
         return forecastCompany[option];
-    }
+    };
 
     render() {
         return (
             <Jumbotron>
                 <h1>Hello, I know you are from {this.props.city}!</h1>
                 <p> I can tell what is the weather now. </p>
-                <p> Choose what weather forecast you want to use: </p>
+                <p> Choose what weather forecast service you want to use: </p>
                 <Form onSubmit={this.handleFormSubmit}>
-                    <div key={`custom-radio`} className="mb-3">
+                    <div key="custom-radio" className="mb-3">
                         <Form.Check
                             custom
-                            type={`radio`}
-                            value={`weatherForecast1`}
-                            label={`Weatherbit`}
-                            id={`custom-radio-1`}
+                            type="radio"
+                            value="weatherForecast1"
+                            label="Weatherbit"
+                            id="custom-radio-1"
                             checked={this.state.selectedForecast === "weatherForecast1"}
-                            onChange={this.handleForcastChange}
+                            onChange={this.handleForecastChange}
                         />
                         <Form.Check
                             custom
-                            type={`radio`}
-                            value={`weatherForecast2`}
-                            label={`Open Weather Map`}
-                            id={`custom-radio-2`}
+                            type="radio"
+                            value="weatherForecast2"
+                            label="Open Weather Map"
+                            id="custom-radio-2"
                             checked={this.state.selectedForecast === "weatherForecast2"}
-                            onChange={this.handleForcastChange}
+                            onChange={this.handleForecastChange}
                         />
                     </div>
                     <Button variant="primary" type="submit">Check the weather</Button>
                 </Form>
-
             </Jumbotron>
-        )
-    }
-}
+        );
+    };
+};
 
 export default WeatherForecastForm;

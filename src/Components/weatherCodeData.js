@@ -59,6 +59,6 @@ const weatherCodeData = {
     "803": "/images/14.png",
     "804": "/images/14.png",
     "900": "/images/4.png"
-}
+};
 
 export default weatherCodeData;

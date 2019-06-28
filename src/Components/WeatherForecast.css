@@ -1,0 +1,13 @@
+.weather-text::first-letter{
+    text-transform: uppercase;
+}
+
+.card-container{
+    width: 11rem;
+    margin: 2%;
+}
+
+.card-header{
+    color: #007bff;
+    font-weight: bold;
+}
