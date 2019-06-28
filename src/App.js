@@ -1,8 +1,17 @@
 import React, { Component, Fragment } from "react";
-import Header from "./Components/Header";
-import WeatherForecast from "./Components/WeatherForecast";
+import Header from "./Components/Header/";
+import WeatherForecast from "./Components/WeatherForecast/";
 import WeatherForecastForm from "./Components/WeatherForecastForm";
 import ErrorAlert from "./Components/ErrorAlert";
+import {
+  INFO_TYPES,
+  CACHED_DATE_TYPES,
+  CITY_API, WEATHERBIT_API,
+  OPEN_WEATHER_MAP_API,
+  WEATHER_FORECAST_TYPE,
+  CACHED_TIME,
+  SELECTED_WEATHER_FORECAST
+} from "./const";
 
 
 class App extends Component {
@@ -12,15 +21,15 @@ class App extends Component {
     weatherInfo: null,
     cachedDateCityInfo: null,
     cachedDateWeatherInfo: null,
-    error: null
+    error: false
   };
 
   componentDidMount() {
-    const cachedCityInfo = localStorage.getItem("cityInfo");
-    const cachedDate = localStorage.getItem("cachedDateCityInfo");
+    const cachedCityInfo = localStorage.getItem(INFO_TYPES.CITY);
+    const cachedDate = localStorage.getItem(CACHED_DATE_TYPES.CITY_INFO);
     const currentDate = Date.now();
     if (cachedCityInfo && cachedDate) {
-      const checkedDate = Number(cachedDate) + 7200000;
+      const checkedDate = Number(cachedDate) + CACHED_TIME;
       if (checkedDate > currentDate) {
         this.setState({ cityInfo: JSON.parse(cachedCityInfo) })
       } else {
@@ -33,7 +42,7 @@ class App extends Component {
 
   loadCityInfo = async () => {
     try {
-      const response = await fetch("https://ipapi.co/json/");
+      const response = await fetch(CITY_API.URL);
       const cityData = await response.json();
       this.setState({
         cityInfo: {
@@ -43,17 +52,16 @@ class App extends Component {
         },
         cachedDateCityInfo: Date.now()
       });
-      localStorage.setItem("cityInfo", JSON.stringify(this.state.cityInfo));
-      localStorage.setItem("cachedDateCityInfo", this.state.cachedDateCityInfo);
+      localStorage.setItem(INFO_TYPES.CITY, JSON.stringify(this.state.cityInfo));
+      localStorage.setItem(CACHED_DATE_TYPES.CITY_INFO, this.state.cachedDateCityInfo);
     } catch {
-      this.setState({ ...this.state, error: "Error in loading city information." });
+      this.setState({ ...this.state, error: true });
     };
   };
 
-  loadWeather1 = async () => {
+  loadWetherbit = async () => {
     try {
-      const apiKey = "f7deebe0f69843849fbac329bf36ad07";
-      const weatherServiceUrl = `https://api.weatherbit.io/v2.0/current?city=${this.state.cityInfo.city}&key=${apiKey}`;
+      const weatherServiceUrl = `${WEATHERBIT_API.URL}?city=${this.state.cityInfo.city}&key=${WEATHERBIT_API.KEY}`;
       const response = await fetch(weatherServiceUrl);
       const weatherData = await response.json();
       this.setState({
@@ -64,18 +72,16 @@ class App extends Component {
         },
         cachedDateWeatherInfo: Date.now()
       });
-      localStorage.setItem("weatherInfo", JSON.stringify(this.state.weatherInfo));
-      localStorage.setItem("cachedDateWeatherInfo", this.state.cachedDateWeatherInfo);
+      localStorage.setItem(INFO_TYPES.WEATHER, JSON.stringify(this.state.weatherInfo));
+      localStorage.setItem(CACHED_DATE_TYPES.WEATHER_INFO, this.state.cachedDateWeatherInfo);
     } catch {
-      this.setState({ ...this.state, error: "Error in loading Weatherbit." });
+      this.setState({ ...this.state, error: true });
     };
   };
 
-  loadWeather2 = async () => {
+  loadOpenWeatherMap = async () => {
     try {
-      const apiKey = "860ae597957b496c4198358824ce99f1";
-      const tempUnit = "metric"
-      const weatherServiceUrl = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.cityInfo.city}&units=${tempUnit}&appid=${apiKey}`;
+      const weatherServiceUrl = `${OPEN_WEATHER_MAP_API.URL}?q=${this.state.cityInfo.city}&units=${OPEN_WEATHER_MAP_API.TEMP_UNIT}&appid=${OPEN_WEATHER_MAP_API.KEY}`;
       const response = await fetch(weatherServiceUrl);
       const weatherData = await response.json();
       this.setState({
@@ -86,52 +92,48 @@ class App extends Component {
         },
         cachedDateWeatherInfo: Date.now()
       });
-      localStorage.setItem("weatherInfo", JSON.stringify(this.state.weatherInfo));
-      localStorage.setItem("cachedDateWeatherInfo", this.state.cachedDateWeatherInfo);
+      localStorage.setItem(INFO_TYPES.WEATHER, JSON.stringify(this.state.weatherInfo));
+      localStorage.setItem(CACHED_DATE_TYPES.WEATHER_INFO, this.state.cachedDateWeatherInfo);
     } catch {
-      this.setState({ ...this.state, error: "Error in loading Open Weather Map." });
+      this.setState({ ...this.state, error: true });
     }
   };
 
-  checkWeatherCache1 = () => {
-    const cachedWeatherInfo = localStorage.getItem("weatherInfo");
-    const cachedDate = localStorage.getItem("cachedDateWeatherInfo");
-    const cacheSelectedForecast = localStorage.getItem("selectedForecast");
+  checkCacheWeatherbit = () => {
+    const cachedWeatherInfo = localStorage.getItem(INFO_TYPES.WEATHER);
+    const cachedDate = localStorage.getItem(CACHED_DATE_TYPES.WEATHER_INFO);
+    const cacheSelectedForecast = localStorage.getItem(SELECTED_WEATHER_FORECAST);
     const currentDate = Date.now();
-    if (cachedWeatherInfo && cachedDate) {
+    if (cachedWeatherInfo &&
+      cachedDate &&
+      cacheSelectedForecast === WEATHER_FORECAST_TYPE.WEATHERBIT) {
       const checkedDate = Number(cachedDate) + 7200000;
-      if (cacheSelectedForecast === "weatherForecast1") {
-        if (checkedDate > currentDate) {
-          this.setState({ weatherInfo: JSON.parse(cachedWeatherInfo) });
-        } else {
-          this.loadWeather1();
-        }
+      if (checkedDate > currentDate) {
+        this.setState({ weatherInfo: JSON.parse(cachedWeatherInfo) });
       } else {
-        this.loadWeather1();
+        this.loadWetherbit();
       }
     } else {
-      this.loadWeather1();
+      this.loadWetherbit();
     }
   };
 
-  checkWeatherCache2 = () => {
-    const cachedWeatherInfo = localStorage.getItem("weatherInfo");
-    const cachedDate = localStorage.getItem("cachedDateWeatherInfo");
-    const cacheSelectedForecast = localStorage.getItem("selectedForecast");
+  checkCacheOpenWeatherMap = () => {
+    const cachedWeatherInfo = localStorage.getItem(INFO_TYPES.WEATHER);
+    const cachedDate = localStorage.getItem(CACHED_DATE_TYPES.WEATHER_INFO);
+    const cacheSelectedForecast = localStorage.getItem(SELECTED_WEATHER_FORECAST);
     const currentDate = Date.now();
-    if (cachedWeatherInfo && cachedDate) {
+    if (cachedWeatherInfo &&
+      cachedDate &&
+      cacheSelectedForecast === WEATHER_FORECAST_TYPE.OPEN_WEATHER_MAP) {
       const checkedDate = Number(cachedDate) + 7200000;
-      if (cacheSelectedForecast === "weatherForecast2") {
-        if (checkedDate > currentDate) {
-          this.setState({ weatherInfo: JSON.parse(cachedWeatherInfo) });
-        } else {
-          this.loadWeather2();
-        }
+      if (checkedDate > currentDate) {
+        this.setState({ weatherInfo: JSON.parse(cachedWeatherInfo) });
       } else {
-        this.loadWeather2();
+        this.loadOpenWeatherMap();
       }
     } else {
-      this.loadWeather2();
+      this.loadOpenWeatherMap();
     };
   };
 
@@ -148,8 +150,8 @@ class App extends Component {
               <Header city={this.state.cityInfo.city} />
               <WeatherForecastForm
                 city={this.state.cityInfo.city}
-                checkWeatherCache1={this.checkWeatherCache1}
-                checkWeatherCache2={this.checkWeatherCache2} />
+                checkCacheWeatherbit={this.checkCacheWeatherbit}
+                checkCacheOpenWeatherMap={this.checkCacheOpenWeatherMap} />
             </Fragment>}
           {this.state.weatherInfo &&
             <WeatherForecast
